@@ -45,17 +45,6 @@ function encode(data: ShareData): string {
   return LZString.compressToEncodedURIComponent(JSON.stringify(data));
 }
 
-// 解码
-function decode(encoded: string): ShareData | null {
-  try {
-    const json = LZString.decompressFromEncodedURIComponent(encoded);
-    if (!json) return null;
-    return JSON.parse(json) as ShareData;
-  } catch {
-    return null;
-  }
-}
-
 // 生成分享链接
 export function generateShareUrl(type: ShareType, data: {
   userData: UserData;
@@ -117,16 +106,39 @@ function buildShareData(type: ShareType, data: {
 
 // 从 URL hash 或完整 URL 解析分享数据
 export function parseShareData(input: string): ShareData | null {
-  // 如果是完整 URL，提取 hash 部分
-  let hash = input;
-  if (input.includes('#/import/')) {
-    const idx = input.indexOf('#/import/');
-    hash = input.slice(idx);
+  // 提取 hash 部分（兼容完整 URL 和纯 hash）
+  let hash = input.trim();
+  const hashIdx = hash.indexOf('#/import/');
+  if (hashIdx !== -1) {
+    hash = hash.slice(hashIdx);
+  } else if (!hash.startsWith('#/import/')) {
+    return null;
   }
+
   // hash 格式: #/import/<encoded>
   const match = hash.match(/^#\/import\/(.+)$/);
   if (!match) return null;
-  return decode(match[1]);
+
+  const encoded = match[1];
+
+  // 尝试直接解码
+  let json = LZString.decompressFromEncodedURIComponent(encoded);
+  // 如果失败，尝试 URL decode 一次后再解码（兼容粘贴时被浏览器额外编码的情况）
+  if (!json) {
+    try {
+      const decoded = decodeURIComponent(encoded);
+      json = LZString.decompressFromEncodedURIComponent(decoded);
+    } catch {
+      // ignore
+    }
+  }
+
+  if (!json) return null;
+  try {
+    return JSON.parse(json) as ShareData;
+  } catch {
+    return null;
+  }
 }
 
 // 获取分享类型的中文名称
