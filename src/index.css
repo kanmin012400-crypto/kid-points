@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #7C6FFF;
+  --color-primary-end: #F76F8E;
+  --color-reward: #3ECA6A;
+  --color-punish: #FF5757;
+  --color-bg: #F5F7FF;
+  --color-card: #FFFFFF;
+  --color-text: #6b6375;
+  --color-text-heading: #08060d;
+
+  --font-family-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-family-heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: ui-monospace, Consolas, monospace;
+}
+
+:root {
+  font-family: var(--font-family-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  /* 防止横向滚动 */
+  overflow-x: hidden;
+  /* 移动端适配 */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh; /* 动态视口高度，支持移动端浏览器地址栏变化 */
+}
+
+/* iPhone 安全区域适配 */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* 移动端优化 */
+@media (max-width: 640px) {
+  /* 减少按钮点击区域大小 */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 优化触摸滚动 */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  color: var(--color-text-heading);
+}
