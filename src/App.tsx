@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AppProvider } from './contexts/AppContext';
 import HomePage from './pages/home/HomePage';
@@ -95,10 +95,10 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter basename="/kid-points">
+    <HashRouter>
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
