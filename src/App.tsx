@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AppProvider } from './contexts/AppContext';
 import HomePage from './pages/home/HomePage';
@@ -53,19 +53,15 @@ function NavLink({ to, icon, label }: { to: string; icon: string; label: string 
   const isActive = location.pathname === to;
 
   return (
-    <a
-      href={to}
-      onClick={(e) => {
-        e.preventDefault();
-        window.location.href = to;
-      }}
+    <Link
+      to={to}
       className={`flex flex-col items-center gap-1 ${
         isActive ? 'text-[#7C6FFF]' : 'text-gray-400'
       }`}
     >
       <span className="text-xl">{icon}</span>
       <span className="text-xs font-medium">{label}</span>
-    </a>
+    </Link>
   );
 }
 
@@ -99,7 +95,7 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/kid-points">
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>
