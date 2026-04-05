@@ -148,7 +148,7 @@ export default function HomePage() {
                     <div className="font-medium">{tx.habitName}</div>
                     {tx.note && <div className="text-sm text-gray-400">备注: {tx.note}</div>}
                     <div className="text-sm text-gray-500">
-                      {tx.createdBy} · {new Date(tx.createdAt).toLocaleDateString()}
+                      {tx.createdBy} · {new Date(tx.createdAt).toLocaleString()}
                     </div>
                   </div>
                 </div>
