@@ -188,6 +188,16 @@ export default function SettingsPage() {
           </div>
           <span className="text-[#3ECA6A]">已保存</span>
         </div>
+        <Link
+          to="/settings/share"
+          className="flex items-center justify-between p-4 border-b hover:bg-gray-50 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🔗</span>
+            <span className="font-medium">分享 / 导入</span>
+          </div>
+          <span className="text-gray-400">›</span>
+        </Link>
         <div className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
           <div className="flex items-center gap-3">
             <span className="text-2xl">📤</span>

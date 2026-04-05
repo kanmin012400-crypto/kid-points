@@ -1,3 +1,4 @@
+// Hash router for GitHub Pages compatibility
 import { HashRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AppProvider } from './contexts/AppContext';
@@ -9,6 +10,8 @@ import StatsPage from './pages/stats/StatsPage';
 import SettingsPage from './pages/settings/SettingsPage';
 import HabitManagementPage from './pages/settings/HabitManagementPage';
 import GiftManagementPage from './pages/settings/GiftManagementPage';
+import SharePage from './pages/settings/SharePage';
+import ImportPage from './pages/settings/ImportPage';
 
 function Navigation() {
   const location = useLocation();
@@ -41,6 +44,8 @@ function Navigation() {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/settings/habits" element={<HabitManagementPage />} />
           <Route path="/settings/gifts" element={<GiftManagementPage />} />
+          <Route path="/settings/share" element={<SharePage />} />
+          <Route path="/import/:encoded" element={<ImportPage />} />
           <Route path="/display" element={<DisplayModePage />} />
         </Routes>
       </main>
