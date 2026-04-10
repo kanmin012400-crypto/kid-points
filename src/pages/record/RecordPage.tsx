@@ -22,6 +22,8 @@ export default function RecordPage() {
   const [operator, setOperator] = useState(userData?.parents?.[0]?.name || '爸爸');
   const [note, setNote] = useState('');
   const [floatingPoints, setFloatingPoints] = useState<{ id: number; points: number; x: number; y: number } | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newHabit, setNewHabit] = useState({ name: '', emoji: '✨', points: 10 });
 
   const filteredHabits = useMemo(() => {
     return habits.filter((h) => h.type === activeTab);
@@ -89,6 +91,29 @@ export default function RecordPage() {
     setNote('');
   };
 
+  const openAddModal = () => {
+    setNewHabit({ name: '', emoji: '✨', points: 10 });
+    setShowAddModal(true);
+  };
+
+  const handleAddHabit = () => {
+    if (!newHabit.name) return;
+    dispatch({
+      type: 'ADD_HABIT',
+      payload: {
+        id: Date.now().toString(),
+        name: newHabit.name,
+        emoji: newHabit.emoji,
+        points: newHabit.points,
+        type: activeTab,
+        order: habits.length,
+        userId: 'local',
+        createdAt: new Date(),
+      },
+    });
+    setShowAddModal(false);
+  };
+
   const handleUndo = () => {
     if (!undoToast) return;
     clearTimeout(undoToast.timeout);
@@ -143,13 +168,24 @@ export default function RecordPage() {
             </div>
           </button>
         ))}
+        {/* 新增卡片 */}
+        <button
+          onClick={openAddModal}
+          className={`rounded-2xl p-6 shadow-sm hover:shadow-md transition-all active:scale-95 border-2 border-dashed flex flex-col items-center justify-center ${
+            activeTab === 'reward'
+              ? 'border-[#3ECA6A] text-[#3ECA6A] hover:bg-green-50'
+              : 'border-[#FF5757] text-[#FF5757] hover:bg-red-50'
+          }`}
+        >
+          <div className="text-4xl mb-2">+</div>
+          <div className="font-semibold text-sm">新增{activeTab === 'reward' ? '奖励' : '惩罚'}</div>
+        </button>
       </div>
 
       {filteredHabits.length === 0 && (
-        <div className="text-center py-16 text-gray-400">
-          <div className="text-6xl mb-4">📝</div>
-          <div>还没有{activeTab === 'reward' ? '奖励' : '惩罚'}习惯</div>
-          <div className="text-sm mt-2">请在设置中添加</div>
+        <div className="text-center py-8 text-gray-400">
+          <div className="text-5xl mb-3">📝</div>
+          <div>点击上方卡片添加{activeTab === 'reward' ? '奖励' : '惩罚'}习惯</div>
         </div>
       )}
 
@@ -212,6 +248,62 @@ export default function RecordPage() {
                 className="flex-1 py-3 bg-gradient-to-r from-[#7C6FFF] to-[#F76F8E] text-white rounded-xl font-semibold"
               >
                 确认
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 新增习惯弹窗 */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h3 className="text-xl font-semibold mb-4">
+              新增{activeTab === 'reward' ? '奖励' : '惩罚'}习惯
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-500 mb-1">Emoji</label>
+                <input
+                  type="text"
+                  value={newHabit.emoji}
+                  onChange={(e) => setNewHabit({ ...newHabit, emoji: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7C6FFF]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-500 mb-1">名称</label>
+                <input
+                  type="text"
+                  value={newHabit.name}
+                  onChange={(e) => setNewHabit({ ...newHabit, name: e.target.value })}
+                  placeholder="输入习惯名称..."
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7C6FFF]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-500 mb-1">积分</label>
+                <input
+                  type="number"
+                  value={newHabit.points}
+                  onChange={(e) => setNewHabit({ ...newHabit, points: parseInt(e.target.value) || 0 })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7C6FFF]"
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="flex-1 py-3 bg-gray-100 text-gray-600 rounded-xl font-semibold"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleAddHabit}
+                disabled={!newHabit.name}
+                className="flex-1 py-3 bg-gradient-to-r from-[#7C6FFF] to-[#F76F8E] text-white rounded-xl font-semibold disabled:opacity-50"
+              >
+                保存
               </button>
             </div>
           </div>
